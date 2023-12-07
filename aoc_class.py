@@ -1,8 +1,18 @@
 import re
 from timeit import default_timer as timer
+import sys
+from pathlib import Path
+from datetime import datetime
 
 class AOC():
-    def __init__(self, day, simple=True):
+    def __init__(self, day='', simple=True):
+        if day == '':
+            try:
+                day = Path(sys.modules[self.__module__].__file__).stem
+            except Exception as e:
+                print('Tried to set day from __file__: ', e)
+                day = str(datetime.today().day).zfill(2)
+        print('Working on day: ', day)
         self.beginning_of_time = timer()
         self.day = day
         self.start()
@@ -14,14 +24,22 @@ class AOC():
         
     def stop(self):
         self.end = timer()
-        print("{} Seconds needed for execution".format(round(self.end - self.beginning), 2)) 
+        print(f"{round(self.end - self.beginning, 2)} Seconds needed for execution")
         self.start()
 
     def read_both_files(self):
-        file_path = f'{self.day}_simple.txt'
-        self.lines_simple = self.read_lines(file_path) 
-        file_path = f'{self.day}.txt'
-        self.lines_real = self.read_lines(file_path) 
+        file_path = Path(f'{self.day}_simple.txt')
+        if not file_path.exists():
+            print('no such file: ', file_path)
+            self.lines_simple = []
+        else:
+            self.lines_simple = self.read_lines(file_path) 
+        file_path = Path(f'{self.day}.txt')
+        if not file_path.exists():
+            print('no such file: ', file_path)
+            self.lines_real = []
+        else:
+            self.lines_real = self.read_lines(file_path) 
     
     def set_lines(self, simple=False):
         if simple:
@@ -62,3 +80,8 @@ class AOC():
         for key, value in conversion_dict.items():
             t = t.replace(key, value)
         return t
+    
+if __name__ == '__main__':
+    today = AOC()
+    today.start()
+    today.stop

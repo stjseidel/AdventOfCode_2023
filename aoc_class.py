@@ -4,6 +4,11 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
+from math import gcd 
+from functools import reduce 
+
+
+
 class AOC():
     def __init__(self, day='', simple=True):
         if day == '':
@@ -81,7 +86,20 @@ class AOC():
             t = t.replace(key, value)
         return t
     
+    def create_txt_files(self):
+        files = [Path(f'{self.day}_simple.txt'), Path(f'{self.day}.txt')]
+        for file in files:
+            if not file.exists():
+                file.touch()
+                print('created ', file)
+                
+    def lcm(self, denominators):
+        # return least common denominator of a list of integers
+        return reduce(lambda a,b: a*b // gcd(a,b), denominators)
+
+                
 if __name__ == '__main__':
     today = AOC()
-    today.start()
-    today.stop
+    today.create_txt_files()
+    # today.start()
+    # today.stop

@@ -43,8 +43,6 @@ class Today(AOC):
             # print('winning: ', win)
         print('result: ', prod(wins))
 
-# self.part1()
-            
         self.result1 = prod(wins)
         self.time1 = timer()
         return prod(wins)
@@ -65,7 +63,6 @@ if __name__ == '__main__':
     day = '06'
     today = Today(day, simple=True)
     today.lines
-    # today.chunk_lines(3)
 
 # simple part 1
     today.set_lines(simple=True)

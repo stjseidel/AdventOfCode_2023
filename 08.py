@@ -89,7 +89,7 @@ class Today(AOC):
 
 if __name__ == '__main__':
 # prep
-    today = Today(day='', simple=True)
+    today = Today(day='08', simple=True)
     today.create_txt_files()
     today.lines
 

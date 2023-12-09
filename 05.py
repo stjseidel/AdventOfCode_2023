@@ -7,14 +7,12 @@ Created on Mon Dec  4 06:32:12 2023
 
 from aoc_class import AOC
 from timeit import default_timer as timer
-import re
 
 class Target():
     def __init__(self, sources, target, change):
         self.sources = sources
         self.target = target
         self.change = change
-    
     
 class Today(AOC):
     def __init__(self, day, simple):
@@ -90,35 +88,21 @@ class Today(AOC):
 # =============================================================================
     
     def part1(self):
-        # for line in self.lines:
-        #     this_line = line.split(':')
-        #     game = self.extract_numbers_from_string(this_line[0])
-        #     numbers = this_line[1]
-        
         target_maps = {target:[] for target in list(self.almanac.keys())}
-        last = max(self.almanac.keys())
         for step, alm in self.almanac.items():
-            # al items: target, source, range_len
-            # if not step == last:
-            # print(step, alm)
             for i, al in enumerate(alm):
                 target, sources, range_len = al[0], al[1], al[2]
                 source_range = range(sources, sources+range_len)
                 target_range = range(target, target+range_len)
                 change = target-sources
                 target_map = Target(sources=source_range, target=target_range, change=change)
-                # print(step, al, new_dic)
                 target_maps[step].append(target_map)
-                # print(al)
-                # print(target_maps[step])
-                
     
         # seed_positions = {step:{} for step in range(len(target_maps) + 1)}
         seed_positions = {}
         seed_pos = {seed:seed for seed in self.seeds}    
         seed_positions[0] = seed_pos
         for step, target_map in target_maps.items():
-            print(step)
             seed_positions[step+1] = {}
             for seed, pos in seed_positions[step].items():
                 found = False
@@ -134,14 +118,9 @@ class Today(AOC):
                     # print(f'{step}: {pos} NOT found in {[target.sources for target in target_map]}')
                 # print(seed, pos)
             # print(step)
-            for item in seed_positions[step+1].items():
-                seed, new_pos = item[0], item[1]
-                old_pos = seed_positions[step][seed]
-                # print(seed, ': ', old_pos, ' ---> ', new_pos)
-            # print('----------')
-        # for seed, location in seed_pos.items():
-            # print(seed, location)
-            
+            # for item in seed_positions[step+1].items():
+            #     seed, new_pos = item[0], item[1]
+            #     old_pos = seed_positions[step][seed]
             
         resulting_positions = [seed_positions[max(seed_positions.keys())][seed] for seed in self.seeds]
         print('resulting_positions: ', resulting_positions)
@@ -149,8 +128,6 @@ class Today(AOC):
         self.result1 = result
         self.time1 = timer()
         return result   
-
-
 
     def part2(self):
         self.parse_lines()
@@ -164,20 +141,15 @@ class Today(AOC):
         self.result2 = self.part1()
         self.time2 = timer()
         return self.result2
-        # 155057073 is too high
 
     def print_final(self):
         print(f'Part 1 result is: {self.result1}. (time: {round(self.time1 - self.beginning_of_time, 2)})')
         print(f'Part 2 result is: {self.result2} (time: {round(self.time2 - self.time2, 2)})')
-        
 
 if __name__ == '__main__':
 # prep
     day = '05'
     today = Today(day, simple=True)
-    today.lines
-    # today.parse_lines()
-    # today.chunk_lines(3)
 
 # simple part 1
     today.set_lines(simple=True)
@@ -192,16 +164,20 @@ if __name__ == '__main__':
     print(f'Part 1 <HARD> result is: {result}')
     today.stop()
 
-
 # simple part 2
     today.set_lines(simple=True)
     result = today.part2()
     print(f'Part 2 <SIMPLE> result is: {result}')
     
-# hard part 2
-    today.set_lines(simple=False)
-    result = today.part2()
-    print(f'Part 2 <HARD> result is: {result}')
-    today.stop()
-    today.print_final()
-    
+# =============================================================================
+# simple part 2 provides correct solution but runs out of memory from simply reading
+# the seed ranges into RAM
+# =============================================================================
+# =============================================================================
+# # hard part 2
+#     today.set_lines(simple=False)
+#     result = today.part2()
+#     print(f'Part 2 <HARD> result is: {result}')
+#     today.stop()
+#     today.print_final()
+# =============================================================================

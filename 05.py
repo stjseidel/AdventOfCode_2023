@@ -129,18 +129,123 @@ class Today(AOC):
         self.time1 = timer()
         return result   
 
+# =============================================================================
+#     def part2(self):
+#         self.parse_lines()
+#         chunk_seeds = self.chunk_line(self.seeds, 2)
+#         new_seeds = []
+#         first = [c[0] for c in chunk_seeds] 
+#         for chunk in chunk_seeds:
+#             new_seeds +=  list(range(chunk[0], chunk[0]+chunk[1]))
+#         self.seeds = new_seeds
+#             
+#         self.result2 = self.part1()
+#         self.time2 = timer()
+#         return self.result2
+#     
+# =============================================================================
     def part2(self):
         self.parse_lines()
+        self.almanac
         chunk_seeds = self.chunk_line(self.seeds, 2)
         new_seeds = []
-        first = [c[0] for c in chunk_seeds] 
-        for chunk in chunk_seeds:
-            new_seeds +=  list(range(chunk[0], chunk[0]+chunk[1]))
-        self.seeds = new_seeds
+        current_ranges = [range(seed[0], seed[0]+seed[1]) for seed in chunk_seeds]
+        origin_seeds = sum([len(rng) for rng in current_ranges])
+        # current_ranges = [range(13, 14)]
+        for pos, almanac in self.almanac.items():
+            # print(f'{pos}: starting with {sum([len(rng) for rng in current_ranges])} seeds.')
+            # print(f'{pos} START: {current_ranges}')
+            # input_ranges = [range(maps[0], maps[0]+maps[2]) for maps in almanac]
+            # output_ranges = [range(maps[1], maps[1]+maps[2]) for maps in almanac]
+            output_ranges = []
+            result_ranges = []
+            origin = ''
+            step = 0
+            while len(current_ranges) > 0:
+                step += 1
+                this_range = current_ranges[0]
+                if len(this_range) == 0:
+                    current_ranges.remove(this_range)
+                else:
+                    if origin == this_range:
+                        # print('case 5: no overlaps found in any map, directly convertig without change')
+                        result_ranges.append(this_range)
+                        current_ranges.remove(this_range)
+                    else:
+                        origin = this_range
+                        start = this_range[0]
+                        stop = this_range[-1]
+                        killed = False
+                        for maps in almanac:
+                            # maps[0] == destination, # maps[1] == source, # maps[2] == length
+                            maps_start = maps[1]
+                            maps_stop = maps[1]+maps[2]
+                            change = maps[0] - maps[1]
+                            panic = False
+                            if start + change == 0 or maps_start == 0 or start == 0:
+                                print('panic')
+                                panic = True
+                            if stop < maps_start or start > maps_stop:
+                                pass
+                            else:
+                                if panic:
+                                    pass
+                                current_ranges.remove(this_range)
+                                if start <= maps_start and stop <= maps_stop:  
+                                    # print('case 1')
+                                    # starting earlier and stopping earlier
+                                    result_ranges.append(range(maps_start + change, stop + change + 1))  # [maps_start, stop]
+                                    current_ranges.append(range(start, maps_start))  # [start, maps_start[
+                                    killed = True
+                                    break
+                                elif start >= maps_start and stop <= maps_stop:
+                                    # print('case 2')
+                                # fully within map
+                                    result_ranges.append(range(start + change, stop + change + 1))  # [start, stop]
+                                    killed = True
+                                    break
+                                
+                                elif start >= maps_start and stop > maps_stop:
+                                    # print('case 3')
+                                # starting within and continuing
+                                    result_ranges.append(range(start + change, maps_stop + change + 1))  # [start, maps_stop]
+                                    current_ranges.append(range(maps_stop+1, stop+1))  # ]maps_stop, stop]
+                                    killed = True
+                                    break
+                                    
+                                elif start < maps_start and stop > maps_stop:
+                                    # print('case 4')
+                                    # extends over maps range
+                                    result_ranges.append(range(maps_start + change, maps_stop + change +1))  # [maps_start, maps_stop]
+                                    current_ranges.append(range(start, maps_start))  # [start, maps_start[
+                                    
+                                    current_ranges.append(range(maps_stop+1, stop+1))  # ]maps_stop, maps_stop]
+                                    # almanac.remove(maps)
+                                    killed = True
+                                    break
+                                else:
+                                    print('not supposed to happen!')
+                        if not killed:
+                            result_ranges.append(this_range)
+                            current_ranges.remove(this_range)
+            if sum([len(rng) for rng in result_ranges]) != origin_seeds:
+                print(f'diff: {origin_seeds - sum([len(rng) for rng in result_ranges])}')
+                pass
+            old_current_range = current_ranges
+            current_ranges = list(set(current_ranges + result_ranges))
+            print(f'{pos} END: {min([rng[0] for rng in result_ranges])}. Seeds: {sum([len(rng) for rng in result_ranges])}')
+            print('.')
+        
+        lowest = min([rng[0] for rng in result_ranges])
+        
+        result_seeds = sum([len(rng) for rng in result_ranges])
+        print(f'started with {origin_seeds} seeds and ended with {result_seeds} locations. matching numbers: {origin_seeds == result_seeds}')
+        print(f'diff: {origin_seeds - result_seeds}')
             
-        self.result2 = self.part1()
+        self.result2 = lowest
         self.time2 = timer()
         return self.result2
+    
 
     def print_final(self):
         print(f'Part 1 result is: {self.result1}. (time: {round(self.time1 - self.beginning_of_time, 2)})')
@@ -164,20 +269,22 @@ if __name__ == '__main__':
     print(f'Part 1 <HARD> result is: {result}')
     today.stop()
 
-# simple part 2
-    today.set_lines(simple=True)
-    result = today.part2()
-    print(f'Part 2 <SIMPLE> result is: {result}')
+# =============================================================================
+# # simple part 2
+#     today.set_lines(simple=True)
+#     result = today.part2()
+#     print(f'Part 2 <SIMPLE> result is: {result}')
+# =============================================================================
     
 # =============================================================================
 # simple part 2 provides correct solution but runs out of memory from simply reading
 # the seed ranges into RAM
 # =============================================================================
-# =============================================================================
-# # hard part 2
-#     today.set_lines(simple=False)
-#     result = today.part2()
-#     print(f'Part 2 <HARD> result is: {result}')
-#     today.stop()
-#     today.print_final()
-# =============================================================================
+# hard part 2
+# 32900747 too low
+    today.set_lines(simple=False)
+    result = today.part2()
+    print(f'Part 2 <HARD> result is: {result}')
+    today.stop()
+    today.print_final()
+

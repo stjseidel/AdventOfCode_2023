@@ -1,54 +1,65 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Dec  1 09:14:11 2023
+Created on Mon Dec  4 06:32:12 2023
 
-template
 @author: stjse
 """
 
-for num in range(1, 26):
-    day = str(num).zfill(2)
-
+from aoc_class import AOC
 from timeit import default_timer as timer
-from pathlib import Path
-import pandas as pd
-import csv
-import string
-import numpy as np
-import matplotlib.pyplot as plt
-import re
-start = timer()
-source = Path(f'{day}_input_1.txt')
 
-abc = list(string.ascii_lowercase)
-ABC = list(string.ascii_uppercase)
-letters = abc + ABC
-# 1
-with open(source) as fp:
-    lines = fp.readlines()
-lines = [line.replace('\n', '') for line in lines]
-pattern = re.compile('\d+\.[.\d]+')
-numbers = [str(''.join(filter(str.isdigit, line))) for line in lines]
-summed = 0
-for num in numbers:
-    if len(num) == 0:
-        pass
-    elif len(num) == 1:
-        summed += int(num + num)
-    else: 
-        summed += int(num[0] + num[-1])
-    print(num, summed)
     
-def part_1():
-    pass
+class Today(AOC):
+    # def __init__(self, day):
+    #     AOC.__init__(self, day)
+        
+    def parse_lines(self, file_path=''):
+        lines = self.lines
+        # lines = [[int(lin) for lin in line.split(' ') if set(lin) != set('') ] for line in lines]
+        return lines
+    
+    def part1(self):
+        lines = self.parse_lines()
+        self.result1 = 'TODO'
+        self.time1 = timer()
+        return self.result1
+                
+    def part2(self):
+        lines = self.parse_lines()
+        self.result2 = 'TODO'
+        self.time2 = timer()
+        return self.result2
+        
+    def print_final(self):
+        print(f'Part 1 result is: {self.result1}. (time: {round(self.time1 - self.beginning_of_time, 2)})')
+        print(f'Part 2 result is: {self.result2} (time: {round(self.time2 - self.time1, 2)})')
+        
 
-def part_2():
-    pass
-if __name__ == "__main__":
-    start = timer()
+if __name__ == '__main__':
+# prep
+    today = Today(day='', simple=True)
+    today.create_txt_files()
+
+# simple part 1
+    today.set_lines(simple=True)
+    today.part1()
+    print(f'Part 1 <SIMPLE> result is: {today.result1}')
     
-    
-    
-    
-    
-    
+# hard part 1
+    today.set_lines(simple=False)
+    today.part1()
+    print(f'Part 1 <HARD> result is: {today.result1}')
+    today.stop()
+
+
+# simple part 2
+    today.set_lines(simple=True) 
+    today.part2()
+    print(f'Part 2 <SIMPLE> result is: {today.result2}')
+
+# hard part 2
+    today.set_lines(simple=False)
+    today.part2()
+    print(f'Part 2 <HARD> result is: {today.result2}')
+    today.stop()
+    today.print_final()

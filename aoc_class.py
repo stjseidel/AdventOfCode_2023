@@ -23,6 +23,7 @@ class AOC():
         self.start()
         self.read_both_files()
         self.set_lines(simple=simple)
+        self.simple = simple
         
     def start(self):
         self.beginning = timer()

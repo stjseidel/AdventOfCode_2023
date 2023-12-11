@@ -173,7 +173,7 @@ class Today(AOC):
                     else:
                         self.positions.append(here)
                         direc = self.next_directions[direc][symbol]
-            print('total steps: ', steps)
+            # print('total steps: ', steps)
         self.result1 = steps // 2
         self.time1 = timer()
         return self.result1
@@ -276,21 +276,24 @@ if __name__ == '__main__':
 
 
 # simple part 2
+    today.set_lines(simple=True)
     print('starting part 2, simple2')
     today.part2()
     print(f'Part 2 <SIMPLE> result is: {today.result2}')
 
-# simple part 2
-    print('starting part 2, simple2')
-    today.lines = today.read_lines(file_path='10_simple2.txt')
-    today.part2()
-    print(f'Part 2 <SIMPLE> result is: {today.result2}')
-
-# simple part 2
-    print('starting part 2, simple3')
-    today.lines = today.read_lines(file_path='10_simple3.txt')
-    today.part2()
-    print(f'Part 2 <SIMPLE> result is: {today.result2}')
+# =============================================================================
+# # simple part 2
+#     print('starting part 2, simple2')
+#     today.lines = today.read_lines(file_path='10_simple2.txt')
+#     today.part2()
+#     print(f'Part 2 <SIMPLE> result is: {today.result2}')
+# 
+# # simple part 2
+#     print('starting part 2, simple3')
+#     today.lines = today.read_lines(file_path='10_simple3.txt')
+#     today.part2()
+#     print(f'Part 2 <SIMPLE> result is: {today.result2}')
+# =============================================================================
 
 # hard part 2
     print('starting part 2')

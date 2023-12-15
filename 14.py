@@ -10,7 +10,7 @@ from timeit import default_timer as timer
 import matplotlib.pyplot as plt
 
 
-class Coords():  # spring logs
+class Coords(): 
     def __init__(self, row, col):
         self.row = row
         self.col = col
@@ -19,7 +19,7 @@ class Coords():  # spring logs
       return f'[Coords: [row: {self.row}, col: {self.col}]]>'
     
 
-class Stones():  # spring logs
+class Stones(): 
     def __init__(self, row, col, fixed):
         self.row = row
         self.col = col
@@ -38,7 +38,6 @@ class Today(AOC):
     
     def parse_lines(self, file_path=''):
         lines = self.lines
-        # lines = [[int(lin) for lin in line.split(' ') if set(lin) != set('') ] for line in lines]
         return lines
     
     def part1(self):
@@ -47,15 +46,12 @@ class Today(AOC):
         weight = 0
         for col in columns:
             stackheight = len(col)
-            print(col)
             for i, char in enumerate(col):
                 if char == self.rock:
                     stackheight = len(col) - (i+1)
                 elif char == self.roll:
                     weight += stackheight
                     stackheight -= 1
-                    
-        
         self.result1 = weight
         self.time1 = timer()
         return self.result1
@@ -76,17 +72,6 @@ class Today(AOC):
         # for each possible direction, for the given rank (row or column number)
         # first get all stones on that rank
         # then move all stones as far as possible
-# =============================================================================
-#         if direction in ['north', 'south']:
-#             for col in range(len(self.lines[0])):
-#                 fixed = self.rockranks[(0, col)]
-#                 rankstones = [stone for stone in self.loose if stone.col == col]
-#         else:
-#             for row in range(len(self.lines)):
-#                 fixed = self.rockranks[(row, 0)]
-#                 rankstones = [stone for stone in self.loose if stone.row == row]
-# =============================================================================
-            
         if direction in ['north', 'south']:
             for col in range(len(self.lines[0])):
                 fixed = self.rockranks[(-1, col)]
@@ -99,10 +84,8 @@ class Today(AOC):
                     steps = -1
                     stackheight = len(self.lines) -1               
                     reverse = True
-                # rankstones = sorted([stone.row for stone in rankstones])
                 all_rankstones = fixed + rankstones
                 all_rankstones.sort(key=lambda x: x.row, reverse=reverse)  # sort by their direction 
-                # print([stone.row for stone in all_rankstones])
                 for i, stone in enumerate(all_rankstones):
                     if stone.fixed:
                         stackheight = stone.row + steps
@@ -121,19 +104,14 @@ class Today(AOC):
                     steps = -1
                     stackheight = len(self.lines[0])-1       
                     reverse = True
-                # rankstones = sorted([stone.row for stone in rankstones])
                 all_rankstones = fixed + rankstones
                 all_rankstones.sort(key=lambda x: x.col, reverse=reverse)  # sort by their direction 
-                # print([stone.col for stone in all_rankstones])
                 for i, stone in enumerate(all_rankstones):
                     if stone.fixed:
                         stackheight = stone.col + steps
                     else:
                         all_rankstones[i].col = stackheight
                         stackheight += + steps
-        # sorted([[d.row, d.col] for d in self.loose])
-        # sorted([[d.row, d.col] for d in self.fixed])
-        # print(self.loose)
             
     def calc_north_weight(self):
         return sum([len(self.lines) - stone.row for stone in self.loose])
@@ -155,55 +133,39 @@ class Today(AOC):
         self.get_rock_ranks()
         weights = {}
         self.turn = -1
-        self.plot_stones()
+        # self.plot_stones()
         
-        for i in range(1, 4000):
-            self.turn = i
-            self.direction = self.directions[(i-1)%4]
-            self.slide(self.direction)
-            north_weight = self.calc_north_weight()
-            # print(f'{i}: sliding {self.direction}. weight: {north_weight}')
-            # print(north_weight)
-            if self.turn % 4 == 0:
-                weights[i // 4] = north_weight
-            # if direction == 'east':
-            # self.plot_stones()
-        self.weights = weights
-        self.result2 = weights
-        # for i in range(1000, 1100):
-        #     print(weights[i])
-        # weights[]
-        
-        
-        # weight_chunks = self.chunk_line(list(self.weights.values()), 4)
-        # for chunk in weight_chunks:
-        #     print(chunk)
-        # picked = weight_chunks[1000]
-        
-        pickup = 100  # starting to watch for repetitions after 1000 
-        weight = list(self.weights.values())[pickup:]
         repeated = False
-        i = 5
-        while not repeated and i <= len(weight)//2:
-            if weight[:i] == weight[i:i*2]:
-                repeated = True
-                print(i, weight[:i], weight[i:i*2])
-                period = i
-            else:
-                i += 1
-            
-        print(f'starting from {pickup}, the sequence repeates itself every {i} cycles') 
+        extend = 400
+        start = 1
+        while not repeated:
+            end = start + extend
+            print(f'running from {start} to {end}')
+            for i in range(start, end):
+                self.turn = i
+                self.direction = self.directions[(i-1)%4]
+                self.slide(self.direction)
+                north_weight = self.calc_north_weight()
+                weights[i] = north_weight
+            self.weights = weights
+            self.result2 = weights
         
-        # for i, chunk in enumerate(weight_chunks):
-        #     if chunk == tenth:
-        #         matched.append(i)
-        # print(f'the tenth chuck repeats itself like this: {[(matched[i+1]-matched[i]) for i in range(len(matched[:-1]))]}')
-        # amplitude = 7 * 4
-        # starting from the tenth chuck of 4, we get a repetition after every 28 turns or 7 rotations
-        length = (1000000000 - pickup) % period
+            pickup = (end // 2) +  (end // 2)%4  # starting to watch for repetitions this value while ensuring it is after a drift eastwards
+            i = 5
+            while not repeated and i*2 <= end:
+                if list(self.weights.values())[pickup:pickup+i] == list(self.weights.values())[pickup+i:pickup+i*2]:
+                    repeated = True
+                    print(i, list(self.weights.values())[pickup:pickup+i], list(self.weights.values())[pickup+i:pickup+i*2])
+                    period = i
+                else:
+                    i += 1
+            start += extend
+            
+        print(f'starting from {pickup}, the sequence repeates itself every {i//4} full cycles ({i} slides towards a new direction.)') 
+        
+        length = (1000000000 * 4 - pickup) % period
         self.result2 = self.weights[pickup+length]
         
-        print(today.weights[max(today.weights.keys())])
         self.time2 = timer()
         return self.result2
         
@@ -255,18 +217,16 @@ if __name__ == '__main__':
     today = Today(day='14', simple=True)
     today.create_txt_files()
 
-# =============================================================================
-# # simple part 1
-#     today.set_lines(simple=True)
-#     today.part1()
-#     print(f'Part 1 <SIMPLE> result is: {today.result1}')
-#     
-# # hard part 1
-#     today.set_lines(simple=False)
-#     today.part1()
-#     print(f'Part 1 <HARD> result is: {today.result1}')
-#     today.stop()
-# =============================================================================
+# simple part 1
+    today.set_lines(simple=True)
+    today.part1()
+    print(f'Part 1 <SIMPLE> result is: {today.result1}')
+    
+# hard part 1
+    today.set_lines(simple=False)
+    today.part1()
+    print(f'Part 1 <HARD> result is: {today.result1}')
+    today.stop()
 
 
 # simple part 2
@@ -274,13 +234,10 @@ if __name__ == '__main__':
     today.part2()
     print(f'Part 2 <SIMPLE> result is: {today.result2}')
 
-# =============================================================================
-# # hard part 2
-#     today.set_lines(simple=False)
-#     today.part2()
-#     print(f'Part 2 <HARD> result is: {today.result2}')
-#     today.stop()
-#     today.print_final()
-# 
-# 
-# =============================================================================
+# hard part 2
+    today.set_lines(simple=False)
+    today.part2()
+    print(f'Part 2 <HARD> result is: {today.result2}')
+    today.stop()
+    today.print_final()
+

@@ -6,6 +6,7 @@ from datetime import datetime
 
 from math import gcd 
 from functools import reduce 
+import pandas as pd
 
 
 
@@ -97,6 +98,15 @@ class AOC():
     def lcm(self, denominators):
         # return least common denominator of a list of integers
         return reduce(lambda a,b: a*b // gcd(a,b), denominators)
+    
+    def transpose_lines(self, lines):
+        lines_split = [[char for char in line] for line in lines]  # split lines into chars
+        lines_T = pd.DataFrame(lines_split).T.values.tolist() 
+        lines_T = [''.join(line) for line in lines_T]  # combine the split chars to strings
+        return lines_T
+    
+    
+    
 
                 
 if __name__ == '__main__':

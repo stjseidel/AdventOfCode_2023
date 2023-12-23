@@ -105,8 +105,24 @@ class AOC():
         lines_T = [''.join(line) for line in lines_T]  # combine the split chars to strings
         return lines_T
     
+    def border_coordinates(self, x_max, y_max):
+        """Return a list of all coordinates at the border of a rectangle x,y (length of lines, line)"""
+        border = []
     
+        # Top and bottom borders
+        for x in range(x_max):
+            border.append((x, 0))            # Top border
+            border.append((x, y_max - 1))    # Bottom border
     
+        # Left and right borders (excluding corners to avoid duplicates)
+        for y in range(1, y_max - 1):
+            border.append((0, y))            # Left border
+            border.append((x_max - 1, y))    # Right border
+        return border
+    
+    def border_coordinates_of_lines(self, lines=''):
+        lines = lines or self.lines
+        return self.border_coordinates(len(lines[0]), len(lines))
 
                 
 if __name__ == '__main__':

@@ -52,14 +52,17 @@ if __name__ == '__main__':
     today.stop()
 
 
-# simple part 2
-    today.set_lines(simple=True) 
-    today.part2()
-    print(f'Part 2 <SIMPLE> result is: {today.result2}')
-
-# hard part 2
-    today.set_lines(simple=False)
-    today.part2()
-    print(f'Part 2 <HARD> result is: {today.result2}')
-    today.stop()
-    today.print_final()
+# =============================================================================
+# # simple part 2
+#     today.set_lines(simple=True) 
+#     today.part2()
+#     print(f'Part 2 <SIMPLE> result is: {today.result2}')
+# 
+# # hard part 2
+#     today.set_lines(simple=False)
+#     today.part2()
+#     print(f'Part 2 <HARD> result is: {today.result2}')
+#     today.stop()
+#     today.print_final()
+# 
+# =============================================================================

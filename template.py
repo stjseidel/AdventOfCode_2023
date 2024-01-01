@@ -45,11 +45,13 @@ if __name__ == '__main__':
     today.part1()
     print(f'Part 1 <SIMPLE> result is: {today.result1}')
     
-# hard part 1
-    today.set_lines(simple=False)
-    today.part1()
-    print(f'Part 1 <HARD> result is: {today.result1}')
-    today.stop()
+# =============================================================================
+# # hard part 1
+#     today.set_lines(simple=False)
+#     today.part1()
+#     print(f'Part 1 <HARD> result is: {today.result1}')
+#     today.stop()
+# =============================================================================
 
 
 # =============================================================================
@@ -57,12 +59,14 @@ if __name__ == '__main__':
 #     today.set_lines(simple=True) 
 #     today.part2()
 #     print(f'Part 2 <SIMPLE> result is: {today.result2}')
-# 
+# =============================================================================
+
+# =============================================================================
 # # hard part 2
 #     today.set_lines(simple=False)
 #     today.part2()
 #     print(f'Part 2 <HARD> result is: {today.result2}')
 #     today.stop()
 #     today.print_final()
-# 
 # =============================================================================
+

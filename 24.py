@@ -57,7 +57,6 @@ class Today(AOC):
         for combo in combos:
             try:
                 if self.intersect_2d(combo[0], combo[1]):
-                    # print(combo)
                     collisions += 1
             except Exception as e:
                 print(e, combo)
@@ -75,21 +74,18 @@ class Today(AOC):
     def intersect_2d(self, hail_a, hail_b):
         A = np.array([hail_a.pos_xy, hail_a.pos_xy2])        
         B = np.array([hail_b.pos_xy, hail_b.pos_xy2])   
-        matrix = np.array([A[1]-A[0], B[0]-B[1]])
-        if np.linalg.det(matrix) == 0.0:
-        #     print('singular matrix')
-            return False
-            
-        # print(np.linalg.det(np.array([A[1]-A[0], B[0]-B[1]])))
-        if hail_a.dx/hail_b.dx == hail_a.dy/hail_b.dy:
-            # print('paths are parralel')
-            return False
-        t, s = np.linalg.solve(matrix.T, B[0]-A[0])
-        intersect = (1-t)*A[0] + t*A[1]
+        
+        u = ((hail_b.y - hail_a.y) * hail_b.dx - (hail_b.x - hail_a.x) * hail_b.dy) / (hail_b.dx * hail_a.dy - hail_b.dy * hail_a.dx)
+        v = ((hail_b.y - hail_a.y) * hail_a.dx - (hail_b.x - hail_a.x) * hail_a.dy) / (hail_b.dx * hail_a.dy - hail_b.dy * hail_a.dx)
+
+        
+        xi = hail_b.x + hail_b.dx * v
+        yi = hail_b.y + hail_b.dy * v
+        intersect = [xi, yi]
         if ((intersect[0] - hail_a.x) / hail_a.dx) < 0:  # is the intersection in the future?
             # print('first is in the past', intersect)
             return False
-        if ((intersect[1] - hail_b.y) / hail_b.dy) < 0:  # is the intersection in the future?
+        if ((intersect[0] - hail_b.x) / hail_b.dx) < 0:  # is the intersection in the future?
             # print('second is in the past', intersect)
             return False
 

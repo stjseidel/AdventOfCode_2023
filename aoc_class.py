@@ -22,10 +22,10 @@ class AOC():
         self.beginning_of_time = timer()
         self.day = day
         self.start()
+        self.input_folder = Path('input')
         self.read_both_files()
         self.set_lines(simple=simple)
         self.simple = simple
-        
     def start(self):
         self.beginning = timer()
         
@@ -35,13 +35,13 @@ class AOC():
         self.start()
 
     def read_both_files(self):
-        file_path = Path(f'{self.day}_simple.txt')
+        file_path = self.input_folder / f'{self.day}_simple.txt'
         if not file_path.exists():
             print('no such file: ', file_path)
             self.lines_simple = []
         else:
             self.lines_simple = self.read_lines(file_path) 
-        file_path = Path(f'{self.day}.txt')
+        file_path = self.input_folder / f'{self.day}.txt'
         if not file_path.exists():
             print('no such file: ', file_path)
             self.lines_real = []
@@ -55,6 +55,9 @@ class AOC():
             self.lines = self.lines_real
     
     def read_lines(self, file_path=''):
+        file_path = Path(file_path) 
+        if not file_path.exists():
+            file_path = self.input_folder / file_path
         with open(file_path) as fp:
             lines = fp.readlines()
         self.lines = [line.replace('\n', '') for line in lines]
